@@ -1,3 +1,5 @@
+use std::io::Write;
+
 #[tokio::main]
 async fn main() {
     eprintln!("HULLO");
@@ -26,12 +28,19 @@ async fn main() {
         .unwrap();
 
     while let Some(chunk) = res.chunk().await.unwrap() {
-        println!(
-            "{}",
-            String::from_utf8(chunk.to_vec())
-                .unwrap()
-                .trim_end_matches('\n')
-        );
+        let str = String::from_utf8(chunk.to_vec()).unwrap();
+        if str == "data: [DONE]\n\n" {
+            break;
+        }
+        let data = str.trim_start_matches("data: ").trim_end_matches('\n');
+        let v: serde_json::Value = serde_json::from_str(&data).unwrap();
+
+        let s = match v["choices"][0]["text"].clone() {
+            serde_json::Value::String(s) => s,
+            _ => panic!("Aaaa"),
+        };
+        print!("{}", s);
+        std::io::stdout().flush().unwrap();
     }
-    // println!("body = {:?}", res.text().await.unwrap());
+    println!();
 }
