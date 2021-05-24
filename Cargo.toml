@@ -1,0 +1,15 @@
+[workspace]
+members = [
+  "turbocard",
+  "turbocard_server",
+]
+
+[patch.crates-io]
+# turbosql = {path = "../turbosql/turbosql"}
+# turbosql = {git = "https://github.com/trevyn/turbosql", branch = "main"}
+
+[profile.release]
+codegen-units = 1 # Reduce number of codegen units to increase optimizations.
+lto = true # Enable Link Time Optimization
+# opt-level = 'z' # Optimize for size.
+# panic = 'abort' # Abort on panic
