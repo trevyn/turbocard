@@ -10,9 +10,7 @@ use tokio_tungstenite::tungstenite::Message;
 
 #[tokio::main]
 async fn main() -> Result<()> {
- eprintln!("HULLO");
  run_ws_server().await
- // run_completion().await
 }
 
 async fn run_ws_server() -> Result<()> {
@@ -54,7 +52,6 @@ async fn accept_connection(stream: TcpStream) -> Result<()> {
       if msg.is_text() {  //  || msg.is_binary()
        eprintln!("{}", msg.to_string());
        run_completion(msg.to_string(), &mut sender).await?;
-       // sender.send(msg).await?;
       } else if msg.is_close() {
        break;
       }
